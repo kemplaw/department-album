@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App'
 
 import 'vant/lib/index.css'
+import './stylus/index.styl'
+
 import {
   Row,
   Col,
@@ -14,7 +16,7 @@ Vue.use(Row)
   .use(Col)
   .use(Tab)
   .use(Tabs)
-  .use(List)
+  .use(List);
 
 Vue.config.productionTip = false
 
