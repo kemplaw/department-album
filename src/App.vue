@@ -3,14 +3,14 @@
     <Home
       :tab-list="tabList"
     ></Home>
-    <!--<Forms></Forms>-->
+    <!-- <Forms></Forms> -->
   </div>
 </template>
 
 <script>
+import {departments} from '@utils';
 import Home from '@componnets/home';
 import Forms from '@componnets/forms';
-import {tabList} from '@utils';
 
 export default {
   name: 'App',
@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      tabList,
+      tabList: departments
     }
   }
 }

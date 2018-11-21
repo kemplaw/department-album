@@ -1,6 +1,6 @@
 <template>
   <div class="info-container" :class="[isSub ? 'is-sub' : '']">
-    <h4 class="title">{{userInfo.nickname}}（{{userInfo.position}}）</h4>
+    <h4 class="title">{{userInfo.nickname}}{{userInfo.is_main ? '（主管）' : ''}}</h4>
     <div class="desc-list-wrapper">
       <div class="desc-item">来自哪里：{{userInfo.address}}</div>
       <div class="desc-item">一句话评价自己的性格：{{userInfo.desc}}</div>

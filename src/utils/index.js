@@ -1,5 +1,7 @@
-import tabList from './data'
+import departments from './departments'
+import members from './members'
 
 export {
-  tabList
+  members,
+  departments
 }
