@@ -3,7 +3,7 @@
     <Home
       :tab-list="tabList"
     ></Home>
-    <!-- <Forms></Forms> -->
+     <!--<Forms></Forms>-->
   </div>
 </template>
 
