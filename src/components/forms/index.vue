@@ -6,7 +6,10 @@
       <form ref="formHook" class="form-wrapper">
         <div>
           <span>所在部门：</span>
-          <select v-model="formData.department">
+          <select 
+            v-model="formData.department"
+            @change="handleDepartChange"
+          >
             <option 
               :value="d.id"
               :key="d.name"
@@ -60,7 +63,34 @@
       </form>
     </van-col>
     <van-col span="12" class="form-item-container">
-      <pre>{{departments}}</pre>
+      <ul v-if="departments.length">
+        <li
+          :key="parent.name"
+          v-for="parent in departments"
+        >
+          <h3>{{parent.name}} {{parent.list ? parent.list.length : 0}}</h3>
+          <van-row
+            class="name"
+            type="flex"
+            align="middle"
+            justify="space-between"
+            :key="child.nickname"
+            v-for="child in parent.list"
+          >
+            <span>{{child.nickname}}</span>
+            <div>
+              <van-icon 
+                name="close"
+                @click.native="handleDelUser(child, parent.list)"
+              ></van-icon>
+              <van-icon 
+                name="edit"
+                @click.native="handleEditUser(child)"
+              ></van-icon>
+            </div>
+          </van-row>
+        </li>
+      </ul>
     </van-col>
   </van-row>
 </template>
@@ -86,7 +116,11 @@ export default {
         department: '', // 部门
       },
       infoList: [],
-      departments: departments
+      departments: departments,
+      listInfo: {
+        childIndex: 0,
+        parentIndex: 0
+      }
     };
   },
   mounted() {
@@ -128,13 +162,32 @@ export default {
       });
       let obj = this.departments.find(v => v.id === department);
       this.$set(obj, 'list', this.infoList)
+    },
+    handleDelUser(data, list) {
+      let {id} = data;
+      list = list.filter( v => v.id !== id);
+    },
+    handleEditUser(data) {
+      let {id} = data;
+    },
+    handleDepartChange(v) {
+      let id = Number(v.target.value);
+      let departs =  this.departments.find(item => item.id === id);
+      this.infoList = departs.list || [];
     }
   }
 };
 </script>
 
 <style lang="stylus" scoped>
+  .name
+    padding 5px 10px
+    margin-bottom 5px
+    background #dedede
+
   .form-item-container
+    max-height 600px
+    overflow-y auto
     margin 15px
     border 1px solid #999
 

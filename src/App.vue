@@ -1,11 +1,17 @@
 <template>
   <div id="app">
-    <van-button @click="isView = true">查看效果</van-button>
+    <!-- <van-button @click="isView = true">查看效果</van-button>
     <van-button @click="isView = false">添加数据</van-button>
 
-    <keep-alive>
-      <component :tab-list="tabList" :is="dyComponent"></component>
-    </keep-alive>
+    <div v-show="isView">
+      <Home :tabList="tabList"></Home>
+    </div>
+
+    <div v-show="!isView">
+      <Forms></Forms>
+    </div> -->
+      <Home :tabList="tabList"></Home>
+
   </div>
 </template>
 

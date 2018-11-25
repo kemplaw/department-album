@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   Tab,
+  Icon,
   Tabs,
   List,
   Button
@@ -16,6 +17,7 @@ import {
 Vue.use(Row)
   .use(Col)
   .use(Tab)
+  .use(Icon)
   .use(Tabs)
   .use(List)
   .use(Button)
