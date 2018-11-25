@@ -10,13 +10,15 @@ import {
   Tab,
   Tabs,
   List,
+  Button
 } from 'vant';
 
 Vue.use(Row)
   .use(Col)
   .use(Tab)
   .use(Tabs)
-  .use(List);
+  .use(List)
+  .use(Button)
 
 Vue.config.productionTip = false
 

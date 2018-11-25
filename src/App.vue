@@ -1,27 +1,35 @@
 <template>
   <div id="app">
-    <Home
-      :tab-list="tabList"
-    ></Home>
-     <!--<Forms></Forms>-->
+    <van-button @click="isView = true">查看效果</van-button>
+    <van-button @click="isView = false">添加数据</van-button>
+
+    <keep-alive>
+      <component :tab-list="tabList" :is="dyComponent"></component>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import {departments} from '@utils';
-import Home from '@componnets/home';
-import Forms from '@componnets/forms';
+import { departments } from "@utils";
+import Home from "@componnets/home";
+import Forms from "@componnets/forms";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Home,
     Forms
   },
+  computed: {
+    dyComponent() {
+      return this.isView ? Home : Forms;
+    }
+  },
   data() {
     return {
+      isView: false,
       tabList: departments
-    }
+    };
   }
-}
+};
 </script>
