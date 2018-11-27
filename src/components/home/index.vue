@@ -20,7 +20,9 @@
           :title="tab.name"
           :key="tab.name"
         >
-          <van-list>
+          <van-list
+            v-if="tab.list && tab.list.length"
+          >
             <van-row
               type="flex"
               align="middle"
@@ -49,7 +51,6 @@
 </template>
 
 <script>
-import BScroll from "better-scroll";
 import infoList from "./info-list";
 
 export default {
@@ -67,9 +68,9 @@ export default {
   },
   computed: {
     fmtMainAvatar() {
-      let {did, id} = this.main_user;
+      let {did = 12, id = 1} = this.main_user;
       return {
-        backgroundImage: `url(/static/avatar/${did}_${id}_b.png)`,
+        backgroundImage: `url(./kbd_albums/avatar/${did}_${id}_b.png)`,
       }
     }
   },
@@ -80,21 +81,14 @@ export default {
   },
   mounted() {
     this.$nextTick(_ => {
-      // this.initBScroll();
       this.main_user = this.tabList[1].up_data || {};
     });
   },
   methods: {
-    initBScroll() {
-      let wrapper = this.$refs.scrollHook;
-      let scroll = new BScroll(wrapper, {
-        click: true
-      });
-    },
     avatar(did, mid) {
-      return `/static/avatar/${did}_${mid}.png`;
+      return `./kbd_albums/avatar/${did}_${mid}.png`;
     },
-    handleTagChange(index, title) {
+    handleTagChange(index) {
       this.main_user = this.tabList[index].up_data || {};
     }
   }
@@ -102,10 +96,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-/* .container
-  width 100%
-  height 100%
-  overflow hidden */
 
 .wrapper
   .main-img-wrapper
