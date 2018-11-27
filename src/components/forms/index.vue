@@ -5,9 +5,33 @@
     <van-col span="12" class="form-item-container">
       <form ref="formHook" class="form-wrapper">
         <div>
+          <span>总主管：</span>
+          <select 
+            v-model="formData.all_did"
+          >
+            <option 
+              :value="user"
+              :key="user.nickname"
+              v-for="user in users"
+            >{{user.nickname}}</option>
+          </select>
+        </div>
+        <button type="button" @click="setUpper">批量设置总负责人</button> 
+
+        <div>
+          <span>id: </span>
+          <input name="id" type="text" v-model="departData.id">
+        </div>
+        <div>
+          <span>名称：</span>
+          <input name="nickname" type="text" v-model="departData.name">
+        </div>
+        <button type="button" @click="addDepartment">添加部门</button> 
+
+        <div>
           <span>所在部门：</span>
           <select 
-            v-model="formData.department"
+            v-model="formData.did"
             @change="handleDepartChange"
           >
             <option 
@@ -16,6 +40,10 @@
               v-for="d in departments"
             >{{d.name}}</option>
           </select>
+        </div>
+        <div>
+          <span>id: </span>
+          <input name="id" type="text" v-model="formData.id">
         </div>
         <div>
           <span>名称：</span>
@@ -68,7 +96,21 @@
           :key="parent.name"
           v-for="parent in departments"
         >
-          <h3>{{parent.name}} {{parent.list ? parent.list.length : 0}}</h3>
+          <van-row
+            tag="h3"
+            type="flex"
+            align="middle"
+            justify="space-between"
+          >
+            <div>
+              <input type="checkbox" :value="parent.id" v-model="departIds">
+              <span>部门： {{parent.id}} {{parent.name}} (人数)：{{parent.list ? parent.list.length : 0}}</span>
+            </div>
+            <van-icon 
+              name="close"
+              @click.native="handleDelDepart(parent.id)"
+            ></van-icon>
+          </van-row>
           <van-row
             class="name"
             type="flex"
@@ -77,11 +119,17 @@
             :key="child.nickname"
             v-for="child in parent.list"
           >
-            <span>{{child.nickname}}</span>
+            <van-row
+              type="flex"
+              align="middle"
+              justify="space-around"
+            >
+              <span>{{child.nickname}} {{child.id}}</span>
+            </van-row>
             <div>
               <van-icon 
                 name="close"
-                @click.native="handleDelUser(child, parent.list)"
+                @click.native="handleDelUser(child.id, parent.id)"
               ></van-icon>
               <van-icon 
                 name="edit"
@@ -98,8 +146,6 @@
 <script>
 import {departments} from '@utils';
 
-let id = 1;
-
 export default {
   name: "forms",
   data() {
@@ -113,8 +159,15 @@ export default {
         food: "",
         movie: "",
         is_main: false,
-        department: '', // 部门
+        did: '', // 部门
+        all_did: {}, // 总主管
       },
+      departData: {
+        id: 1,
+        name: '',
+        list: [],
+      },
+      departIds: [],
       infoList: [],
       departments: departments,
       listInfo: {
@@ -122,6 +175,20 @@ export default {
         parentIndex: 0
       }
     };
+  },
+  computed: {
+    users() {
+      let all = this.departments;
+      let list = [];
+      if (all.length) {
+        all.forEach(v => {
+          if (v.list && v.list.length) {
+            list = list.concat(v.list.filter(vv => vv.is_main))
+          }
+        })
+      }
+      return list;
+    },
   },
   mounted() {
     this.$nextTick(_ => {
@@ -138,6 +205,7 @@ export default {
     },
     addUserInfo() {
       let {
+        id = 1,
         nickname,
         address,
         desc,
@@ -146,35 +214,62 @@ export default {
         food,
         movie,
         is_main,
-        department,
+        did,
       } = this.formData;
-
       this.infoList.push({
-        id: id++,
-        nickname,
-        address,
+        id,
+        did,
         desc,
-        constellation, // 星座
         like,
         food,
         movie,
-        is_main
+        is_main,
+        address,
+        nickname,
+        constellation, // 星座
       });
-      let obj = this.departments.find(v => v.id === department);
+      let obj = this.departments.find(v => v.id === did);
       this.$set(obj, 'list', this.infoList)
     },
-    handleDelUser(data, list) {
-      let {id} = data;
-      list = list.filter( v => v.id !== id);
+    handleDelUser(id, pid) {
+      this.departments.forEach(v => {
+        let list = v.list;
+        if (v.id === pid && list && list.length) {
+          console.log(list.filter(vv => vv.id !== id));
+          v.list = list.filter(vv => vv.id !== id)
+        }
+      })
+    },
+    addDepartment() {
+      this.departments.push(this.departData);
+    },
+    handleDelDepart(did) {
+      this.departments = this.departments.filter(v => v.id !== did);
     },
     handleEditUser(data) {
-      let {id} = data;
+      this.title = '编辑员工';
+      this.formData = data;
     },
     handleDepartChange(v) {
       let id = Number(v.target.value);
       let departs =  this.departments.find(item => item.id === id);
       this.infoList = departs.list || [];
-    }
+    },
+    setUpper() {
+      
+      let departs = this.departIds;
+      let departList = this.departments;
+      let all_did = this.formData.all_did;
+      if (departList.length && departs.length) {
+         departList.forEach(v => {
+           departs.forEach(vv => {
+             if (Number(v.id) === Number(vv)) {
+              this.$set(v, 'up_data', all_did)
+             }
+           })
+         })
+      }
+    },
   }
 };
 </script>
