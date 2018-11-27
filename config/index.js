@@ -8,7 +8,7 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'kbd_albums',
     assetsPublicPath: '/',
     proxyTable: {},
 
